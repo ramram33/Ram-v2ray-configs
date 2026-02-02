@@ -1,13 +1,12 @@
 import requests
 import base64
 from typing import List
+import random
 
-# لیست منابع GitHub – فقط معتبر و فعال‌ها
+# فقط منابع برتر و همیشه به‌روز
 SOURCES = [
     "https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/All_Configs_Sub.txt",
     "https://raw.githubusercontent.com/barry-far/V2ray-Config/main/All_Configs_Sub.txt",
-    "https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/main/subscriptions/v2ray/all_sub.txt",
-    "https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/main/all_configs.txt",
 ]
 
 def fetch_configs_from_url(url: str) -> List[str]:
@@ -16,8 +15,7 @@ def fetch_configs_from_url(url: str) -> List[str]:
         response.raise_for_status()
         lines = [line.strip() for line in response.text.splitlines() if line.strip()]
         valid_prefixes = ('vmess://', 'vless://')
-        valid_configs = [line for line in lines if line.startswith(valid_prefixes)]
-        return valid_configs
+        return [line for line in lines if line.startswith(valid_prefixes)]
     except Exception as e:
         print(f"خطا در دریافت از {url}: {e}")
         return []
@@ -35,6 +33,12 @@ def save_to_files(configs: List[str]):
         print("هیچ کانفیگی برای ذخیره وجود ندارد.")
         return
 
+    # نمونه‌برداری تصادفی اگر تعداد زیاد باشد
+    max_keep = 500   # ← این عدد رو می‌تونی تغییر بدی (مثلاً 500 یا 1500)
+    if len(configs) > max_keep:
+        configs = random.sample(configs, max_keep)
+        print(f"نمونه‌برداری تصادفی انجام شد: {len(configs)} کانفیگ نگه داشته شد")
+
     with open("all_configs.txt", "w", encoding="utf-8") as f:
         f.write("\n".join(configs))
     print(f"فایل all_configs.txt ساخته شد ({len(configs)} کانفیگ)")
@@ -48,6 +52,7 @@ def save_to_files(configs: List[str]):
 if __name__ == "__main__":
     print("شروع جمع‌آوری کانفیگ‌ها...\n")
     configs = collect_all_configs()
-    print(f"\nتعداد کانفیگ‌های منحصربه‌فرد: {len(configs)}")
+    print(f"\nتعداد منحصربه‌فرد اولیه: {len(configs)}")
+
     save_to_files(configs)
     print("\nپایان اجرا.")
