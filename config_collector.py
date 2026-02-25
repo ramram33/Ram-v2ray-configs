@@ -1,7 +1,6 @@
 import requests
 import base64
 from typing import List
-import random
 from urllib.parse import urlparse, parse_qs
 
 # منابع معتبر و به‌روز (می‌تونی بعداً بیشتر اضافه کنی)
@@ -59,18 +58,16 @@ def save_to_files(configs: List[str]):
         print("\nهیچ کانفیگ VLESS + Reality (با security=reality) پیدا نشد.")
         return
     
-    # اگر تعداد خیلی زیاد بود، نمونه‌برداری تصادفی
-    max_keep = 500   # ← این عدد رو می‌تونی تغییر بدی (200، 800، 1500 و ...)
-    displayed_count = len(configs)
+    total = len(configs)
+    print(f"  → تعداد نهایی منحصربه‌فرد: {total:,}")
     
-    if len(configs) > max_keep:
-        configs = random.sample(configs, max_keep)
-        print(f"  → نمونه‌برداری تصادفی: {len(configs)} از {displayed_count} نگه داشته شد")
+    if total > 2000:
+        print("  هشدار: تعداد کانفیگ‌ها زیاد است → فایل ممکن است سنگین شود (برای کلاینت‌های موبایل توصیه نمی‌شود)")
     
     # ذخیره در فایل متنی معمولی
     with open("reality_strict_configs.txt", "w", encoding="utf-8") as f:
         f.write("\n".join(configs) + "\n")
-    print(f"فایل reality_strict_configs.txt ساخته شد ({len(configs)} کانفیگ)")
+    print(f"فایل reality_strict_configs.txt ساخته شد ({total:,} کانفیگ)")
     
     # ذخیره نسخه base64 (برای subscribe سریع در اپ‌ها)
     content = "\n".join(configs).encode("utf-8")
@@ -80,8 +77,8 @@ def save_to_files(configs: List[str]):
     print("فایل reality_strict_configs_base64.txt ساخته شد")
 
 if __name__ == "__main__":
-    print("شروع جمع‌آوری کانفیگ‌های VLESS + Reality (نسخه سخت‌گیرانه) ...\n")
+    print("شروع جمع‌آوری کانفیگ‌های VLESS + Reality (نسخه سخت‌گیرانه - بدون محدودیت تعداد) ...\n")
     configs = collect_all_configs()
-    print(f"\nتعداد منحصربه‌فرد پیدا شده: {len(configs)}")
+    print(f"\nتعداد منحصربه‌فرد پیدا شده: {len(configs):,}")
     save_to_files(configs)
     print("\nپایان اجرا.\n")
