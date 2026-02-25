@@ -1,18 +1,19 @@
-name: Update V2Ray Configs
+name: Update Reality Configs (Manual + Schedule)
 
 on:
+  workflow_dispatch:          # اجازه می‌ده دستی Run workflow بزنی
   schedule:
-    - cron: '*/59 * * * *'   # هر ۳۰ دقیقه
-  workflow_dispatch:         # دکمه دستی هم داشته باشه
+    - cron: '0 */6 * * *'     # مثلاً هر ۶ ساعت یک‌بار (اختیاری)
 
 jobs:
-  update:
+  update-configs:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # مهم: تمام تاریخچه رو بگیر تا بتونی commit کنی
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -24,11 +25,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
-      - name: Run collector
-        run: python config_collector.py
+      - name: Run the Python script
+        run: python fetch_reality.py          # ← اسم فایل اسکریپت پایتونت رو اینجا بگذار
 
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: Auto update configs - ${{ github.run_number }} - $(date '+%Y-%m-%d %H:%M UTC')
-          file_pattern: all_configs.txt all_configs_base64.txt
+      - name: Configure git user
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Commit and push if changes exist
+        run: |
+          git add reality_strict_configs* || true
+          git diff --staged --quiet && echo "No changes to commit" && exit 0
+          git commit -m "Update Reality configs - $(date '+%Y-%m-%d %H:%M UTC')"
+          git push origin HEAD:${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
