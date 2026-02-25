@@ -26,7 +26,7 @@ jobs:
           pip install requests
 
       - name: Run the Python script
-        run: python fetch_reality.py          # ← اسم فایل اسکریپت پایتونت رو اینجا بگذار
+        run: python config_collector.py          # ← اسم فایل اسکریپت پایتونت رو اینجا بگذار
 
       - name: Configure git user
         run: |
