@@ -5,8 +5,7 @@ from urllib.parse import urlparse, parse_qs
 
 # منابع معتبر و به‌روز (می‌تونی بعداً بیشتر اضافه کنی)
 SOURCES = [
-    "https://raw.githubusercontent.com/Epodonios/v2ray-configs/main/All_Configs_Sub.txt",
-    "https://raw.githubusercontent.com/barry-far/V2ray-Config/main/All_Configs_Sub.txt",
+       "https://raw.githubusercontent.com/ALIILAPRO/v2rayNG-Config/main/server.txt",
     # اگر منبع دیگه‌ای داری که کیفیت خوبی داره، اینجا اضافه کن
 ]
 
@@ -82,3 +81,4 @@ if __name__ == "__main__":
     print(f"\nتعداد منحصربه‌فرد پیدا شده: {len(configs):,}")
     save_to_files(configs)
     print("\nپایان اجرا.\n")
+
