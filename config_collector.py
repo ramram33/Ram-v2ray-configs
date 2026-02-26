@@ -5,7 +5,7 @@ from urllib.parse import urlparse, parse_qs
 
 # منابع معتبر و به‌روز (می‌تونی بعداً بیشتر اضافه کنی)
 SOURCES = [
-       "https://raw.githubusercontent.com/MrVmess/v2ray/master/vless-reality.txt",
+       "https://raw.githubusercontent.com/ALIILAPRO/v2rayNG-Config/main/server.txt",
     # اگر منبع دیگه‌ای داری که کیفیت خوبی داره، اینجا اضافه کن
 ]
 
@@ -81,6 +81,7 @@ if __name__ == "__main__":
     print(f"\nتعداد منحصربه‌فرد پیدا شده: {len(configs):,}")
     save_to_files(configs)
     print("\nپایان اجرا.\n")
+
 
 
 
